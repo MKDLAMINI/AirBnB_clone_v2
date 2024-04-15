@@ -21,10 +21,9 @@ class FileStorage:
                 of the specified class.
         """
         if cls is None:
-            return FileStorage.__objects
-        else:
-            return {key: value for key, value in FileStorage.__objects.items()
-                    if key.split('.')[0] == cls}
+            return list(self.__objects.values())
+        
+        return [obj for obj in self.__objects.values() if isinstance(obj, cls)]
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -70,8 +69,6 @@ class FileStorage:
             obj (object, optional): The object to delete.
                 If None, no deletion occurs.
         """
-        if obj is None:
-            return
 
         if obj is not None:
             key = "{}.{}".format(obj.__class__.__name__, obj.id)
