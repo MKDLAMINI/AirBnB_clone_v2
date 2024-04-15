@@ -1,7 +1,11 @@
 #!/usr/bin/python3
 """ Console Module """
+
+import re
 import cmd
+import uuid
 import sys
+from datetime import datetime
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -120,21 +124,20 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        elif args not in HBNBCommand.classes:
+        class_name, *params = args.split(' ')
+        if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
 
-        new_instance = HBNBCommand.classes[args]()
+        new_instance = HBNBCommand.classes[class_name]()
 
-
-        params = {}
-        for param in args.split(' ')[1:]:
+        obj_kwargs = {}
+        for param in params:
             try:
                 key, value = param.split('=')
                 key = key.strip()
                 value = value.strip()
             except ValueError:
-
                 continue
 
             if value.startswith('"') and value.endswith('"'):
@@ -148,18 +151,15 @@ class HBNBCommand(cmd.Cmd):
                     except ValueError:
                         pass
 
-            params[key] = value
+            obj_kwargs[key] = value
 
-        for key, value in params.items():
-            if key in HBNBCommand.types and \
-                    isinstance(getattr(new_instance, key), str):
+        for key, value in obj_kwargs.items():
+            if key in HBNBCommand.types and isinstance(getattr(new_instance, key), str):
                 value = HBNBCommand.types[key](value)
             setattr(new_instance, key, value)
-
         storage.save()
         print(new_instance.id)
         storage.save()
-
 
     def help_create(self):
         """ Help information for the create method """
@@ -233,22 +233,21 @@ class HBNBCommand(cmd.Cmd):
         print("[Usage]: destroy <className> <objectId>\n")
 
     def do_all(self, args):
-        """ Shows all objects, or all objects of a class"""
-        print_list = []
+        """Shows all objects, or all objects of a class"""
+        if not args:
+            obj_list = list(storage.all().values())
+            for obj in obj_list:
+                print(obj)
+            return
 
-        if args:
-            args = args.split(' ')[0]  # remove possible trailing args
-            if args not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
-        else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
+        class_name = args.split(' ')[0]
+        if class_name not in HBNBCommand.classes:
+            print("** class doesn't exist **")
+            return
 
-        print(print_list)
+        for k, v in storage.all().items():
+            if k.split('.')[0] == class_name:
+                print(v)
 
     def help_all(self):
         """ Help information for the all command """
