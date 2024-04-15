@@ -4,6 +4,8 @@ from os import getenv
 from models.base_model import Base
 from models.state import State
 from models.city import City
+from models.user import User
+
 
 class DBStorage:
     """ Database storage engine """
@@ -29,7 +31,7 @@ class DBStorage:
         if cls:
             objs = session.query(cls).all()
         else:
-            classes = [State, City]  # Add other classes as needed
+            classes = [State, City, User]
             for cls in classes:
                 objs.update({obj.id: obj for obj in session.query(cls).all()})
         return objs
