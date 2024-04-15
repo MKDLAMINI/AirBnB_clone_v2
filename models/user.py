@@ -8,7 +8,7 @@ class User(BaseModel, Base):
     """ User class that inherits from BaseModel and Base """
     __tablename__ = 'users'
 
-    password = Column(String(128), nullable=False)
     email = Column(String(128), nullable=False)
-    last_name = Column(String(128))
+    password = Column(String(128), nullable=False)
     first_name = Column(String(128))
+    last_name = Column(String(128))
