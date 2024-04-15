@@ -21,8 +21,8 @@ class FileStorage:
                 of the specified class.
         """
         if cls is None:
-            return list(self.__objects.values())
-        
+            return FileStorage.__objects      
+  
         return [obj for obj in self.__objects.values() if isinstance(obj, cls)]
 
     def new(self, obj):
