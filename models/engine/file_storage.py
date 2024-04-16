@@ -32,11 +32,11 @@ class FileStorage:
     def save(self):
         """Saves storage dictionary to file"""
         with open(FileStorage.__file_path, 'w') as f:
-            temp = {}
-            temp.update(FileStorage.__objects)
-            for key, val in temp.items():
-                temp[key] = val.to_dict()
-            json.dump(temp, f)
+            temp_data = {}
+            temp_data.update(FileStorage.__objects)
+            for key, val in temp_data.items():
+                temp_data[key] = val.to_dict()
+            json.dump(temp_data, f)
 
     def reload(self):
         """Loads storage dictionary from file"""
@@ -74,3 +74,7 @@ class FileStorage:
             key = "{}.{}".format(obj.__class__.__name__, obj.id)
             if key in self.__objects:
                 del self.__objects[key]
+
+    def close(self):
+        """Calls the reload method to close"""
+        self.reload()
