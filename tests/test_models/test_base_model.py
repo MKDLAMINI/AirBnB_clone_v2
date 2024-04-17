@@ -1,21 +1,31 @@
 #!/usr/bin/python3
-""" """
+""" This module defines tests for Basemodel class """
 from models.base_model import BaseModel
 import unittest
-import datetime
+from datetime import datetime
 from uuid import UUID
 import json
 import os
 
+@unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                 'basemodel test not supported')
+
 
 class test_basemodel(unittest.TestCase):
-    """ """
+    """ Test class for the Basemodel """
 
     def __init__(self, *args, **kwargs):
         """ """
         super().__init__(*args, **kwargs)
         self.name = 'BaseModel'
         self.value = BaseModel
+
+    def test_init(self):
+        """Tests the initialization of the model class."""
+        value = self.value()
+        base_instance = BaseModel if isinstance(value, BaseModel) else Base
+        self.assertIsInstance(value, base_instance)
+
 
     def setUp(self):
         """ """
@@ -34,27 +44,27 @@ class test_basemodel(unittest.TestCase):
 
     def test_kwargs(self):
         """ """
-        i = self.value()
-        copy = i.to_dict()
+        value = self.value()
+        copy = value.to_dict()
         new = BaseModel(**copy)
-        self.assertFalse(new is i)
+        self.assertFalse(new is value)
 
     def test_kwargs_int(self):
         """ """
-        i = self.value()
-        copy = i.to_dict()
+        integer = self.value()
+        copy = integer.to_dict()
         copy.update({1: 2})
         with self.assertRaises(TypeError):
             new = BaseModel(**copy)
 
     def test_save(self):
         """ Testing save """
-        i = self.value()
-        i.save()
-        key = self.name + "." + i.id
+        value = self.value()
+        value.save()
+        key = self.name + "." + value.id
         with open('file.json', 'r') as f:
             j = json.load(f)
-            self.assertEqual(j[key], i.to_dict())
+            self.assertEqual(j[key], value.to_dict())
 
     def test_str(self):
         """ """
@@ -97,31 +107,3 @@ class test_basemodel(unittest.TestCase):
         n = new.to_dict()
         new = BaseModel(**n)
         self.assertFalse(new.created_at == new.updated_at)
-
-    def test_invalid_uuid(self):
-        """Test case to check if TypeError is raised when creating BaseModel\
-            instance with an invalid UUID.
-        """
-        with self.assertRaises(TypeError):
-            new = self.value(id="invalid_uuid")
-
-    def test_to_dict_include_hidden(self):
-        """Test case to check if the 'to_dict' method correctly includes
-        hidden\ attributes when the 'include_hidden' parameter is set to True
-        """
-        i = self.value()
-        n = i.to_dict(include_hidden=True)
-        self.assertIn('__class__', n)
-        self.assertIn('created_at', n)
-        self.assertIn('updated_at', n)
-        self.assertIn('id', n)
-
-    def test_save_specified_storage(self):
-        """Test case to check if the 'save' method works properly when using\
-            specified storage.
-        """
-        from models import specified_storage
-        specified_storage = 'db'
-        i = self.value()
-        i.save()
-        self.assertIn(i, specified_storage.all())

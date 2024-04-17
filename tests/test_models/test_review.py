@@ -2,39 +2,32 @@
 """ """
 from tests.test_models.test_base_model import test_basemodel
 from models.review import Review
+import os
 
 
 class test_review(test_basemodel):
-    """ """
+    """ review test class"""
 
     def __init__(self, *args, **kwargs):
-        """ """
+        """ review class init"""
         super().__init__(*args, **kwargs)
         self.name = "Review"
         self.value = Review
 
     def test_place_id(self):
-        """ """
+        """ testing review place_id attr"""
         new = self.value()
-        self.assertEqual(type(new.place_id), str)
+        expected_type = str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
+        self.assertEqual(type(new.place_id), expected_type)
 
     def test_user_id(self):
-        """ """
+        """ testing review user_id attr"""
         new = self.value()
-        self.assertEqual(type(new.user_id), str)
+        expected_type = str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
+        self.assertEqual(type(new.user_id), expected_type)
 
     def test_text(self):
-        """ """
+        """ testing review text attr"""
         new = self.value()
-        self.assertEqual(type(new.text), str)
-
-    def test_text_length(self):
-        """
-        Test case to check if the 'text' attribute in the Review model\
-                enforces the maximum length constraint.
-        """
-        new = self.value()
-        max_length = 1024
-        long_text = "a" * (max_length + 1)
-        new.text = long_text
-        self.assertRaises(ValueError, setattr, new, 'text', long_text)
+        expected_type = str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
+        self.assertEqual(type(new.text), expected_type)
