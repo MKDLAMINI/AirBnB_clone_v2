@@ -122,17 +122,25 @@ class HBNBCommand(cmd.Cmd):
         """ Create an object of any class"""
         ignored_attrs = ('id', 'created_at', 'updated_at', '__class__')
         class_name = ''
+
         name_pattern = r'(?P<name>(?:[a-zA-Z]|_)(?:[a-zA-Z]|\d|_)*)'
         class_same = re.match(name_pattern, args)
         obj_kwargs = {}
-        if class_same is not None:
+        if class_same:
             class_name = class_same.group('name')
             params_str = args[len(class_name):].strip()
-            params_pattern = r'(?P<param_name>[a-zA-Z_]+)="(?P<param_value>[^"]*)"'
+            params_pattern = r'(?P<param_name>[a-zA-Z_]+)=((?P<t_str>"[^"]*")|(?P<t_float>[-+]?\d+\.\d+)|(?P<t_int>[-+]?\d+))'
             for param_match in re.finditer(params_pattern, params_str):
                 param_name = param_match.group('param_name')
-                param_value = param_match.group('param_value').replace('_', ' ')
-                obj_kwargs[param_name] = param_value
+                str_v = param_match.group('t_str')
+                float_v = param_match.group('t_float')
+                int_v = param_match.group('t_int')
+                if float_v is not None:
+                    obj_kwargs[param_name] = float(float_v)
+                elif int_v is not None:
+                    obj_kwargs[param_name] = int(int_v)
+                elif str_v is not None:
+                    obj_kwargs[param_name] = str_v[1:-1].replace('_', ' ')
         else:
             class_name = args
         if not class_name:
