@@ -2,8 +2,20 @@
 """ Place Module for HBNB project """
 from models.base_model import BaseModel, Base
 from models import specified_storage
-from sqlalchemy import Column, String, Integer, Float, ForeignKey
+from sqlalchemy import Table, Column, String, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
+from models.amenity import Amenity
+from models.review import Review
+
+if specified_storage == 'db':
+    place_amenity = Table(
+        'place_amenity',
+        Base.metadata,
+        Column('place_id', String(60), ForeignKey('places.id'),
+               primary_key=True, nullable=False),
+        Column('amenity_id', String(60), ForeignKey('amenities.id'),
+               primary_key=True, nullable=False)
+    )
 
 
 class Place(BaseModel, Base):
@@ -24,6 +36,10 @@ class Place(BaseModel, Base):
         reviews = relationship("Review",
                                cascade="all, delete-orphan",
                                backref="place")
+        amenities = relationship("Amenity",
+                                 secondary=place_amenity,
+                                 viewonly=False,
+                                 backref="place_amenities")
     else:
         city_id = ""
         user_id = ""
@@ -45,3 +61,19 @@ class Place(BaseModel, Base):
             list_of_reviews = [review for review in all_reviews
                                if review.place_id == self.id]
             return list_of_reviews
+
+        @property
+        def amenities(self):
+            """Getter attribute amenities"""
+            from models import storage
+            all_amenities = storage.all(Amenity).values()
+            list_of_amenities = [amenity for amenity in all_amenities
+                                 if amenity.id in self.amenity_ids]
+            return list_of_reviews
+
+        @amenities.setter
+        def amenities(self, amenity):
+            """Setter attribute amenities"""
+            if amenity is not None and isinstance(amenity, Amenity) \
+                    and amenity.id not in self.amenity_ids:
+                self.amenity_ids.append(amenity.id)
