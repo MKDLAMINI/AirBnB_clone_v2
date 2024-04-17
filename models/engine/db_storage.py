@@ -6,6 +6,7 @@ from models.state import State
 from models.city import City
 from models.user import User
 from models.place import Place
+from models.review import Review
 
 
 classes = {"User": User, "State": State, "City": City, "Place": Place}
@@ -74,7 +75,8 @@ class DBStorage:
     def reload(self):
         """ Create all tables in the database and create a new session """
         Base.metadata.create_all(self.__engine)
-        session_creation = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_creation = sessionmaker(bind=self.__engine,
+                                        expire_on_commit=False)
         self.__session = scoped_session(session_creation)()
 
     def close(self):

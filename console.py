@@ -78,7 +78,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] == '{' and pline[-1] =='}'\
+                    if pline[0] == '{' and pline[-1] == '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -129,7 +129,10 @@ class HBNBCommand(cmd.Cmd):
         if class_same:
             class_name = class_same.group('name')
             params_str = args[len(class_name):].strip()
-            params_pattern = r'(?P<param_name>[a-zA-Z_]+)=((?P<t_str>"[^"]*")|(?P<t_float>[-+]?\d+\.\d+)|(?P<t_int>[-+]?\d+))'
+            params_pattern = r'(?P<param_name>[a-zA-Z_]+)=(' \
+                             r'(?P<t_str>"[^"]*")|' \
+                             r'(?P<t_float>[-+]?\d+\.\d+)|' \
+                             r'(?P<t_int>[-+]?\d+))'
             for param_match in re.finditer(params_pattern, params_str):
                 param_name = param_match.group('param_name')
                 str_v = param_match.group('t_str')
@@ -360,6 +363,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
