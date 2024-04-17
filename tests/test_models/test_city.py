@@ -4,6 +4,7 @@ from tests.test_models.test_base_model import test_basemodel
 from models.city import City
 import os
 
+
 class test_City(test_basemodel):
     """ """
 
@@ -16,13 +17,17 @@ class test_City(test_basemodel):
     def test_state_id(self):
         """Testing state_id type."""
         new = self.value()
-        expected_type = str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
+        expected_type = (
+            str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
+        )
         self.assertEqual(type(new.state_id), expected_type)
 
     def test_name(self):
         """Testing name type."""
         new = self.value()
-        expected_type = str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
+        expected_type = (
+            str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
+        )
         self.assertEqual(type(new.name), expected_type)
 
     def test_relationship_places(self):

@@ -7,10 +7,9 @@ from uuid import UUID
 import json
 import os
 
+
 @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
                  'basemodel test not supported')
-
-
 class test_basemodel(unittest.TestCase):
     """ Test class for the Basemodel """
 
@@ -26,7 +25,6 @@ class test_basemodel(unittest.TestCase):
         base_instance = BaseModel if isinstance(value, BaseModel) else Base
         self.assertIsInstance(value, base_instance)
 
-
     def setUp(self):
         """ """
         pass
@@ -34,7 +32,7 @@ class test_basemodel(unittest.TestCase):
     def tearDown(self):
         try:
             os.remove('file.json')
-        except:
+        except Exception:
             pass
 
     def test_default(self):

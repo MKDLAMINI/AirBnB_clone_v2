@@ -17,17 +17,23 @@ class test_review(test_basemodel):
     def test_place_id(self):
         """ testing review place_id attr"""
         new = self.value()
-        expected_type = str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
+        expected_type = (
+            str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
+        )
         self.assertEqual(type(new.place_id), expected_type)
 
     def test_user_id(self):
         """ testing review user_id attr"""
         new = self.value()
-        expected_type = str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
+        expected_type = (
+            str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
+        )
         self.assertEqual(type(new.user_id), expected_type)
 
     def test_text(self):
         """ testing review text attr"""
         new = self.value()
-        expected_type = str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
+        expected_type = (
+            str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
+        )
         self.assertEqual(type(new.text), expected_type)

@@ -18,5 +18,7 @@ class test_Amenity(test_basemodel):
         """ Test case to check initialization of 'name' attribute.
         """
         new = self.value()
-        expected_type = str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
+        expected_type = (
+            str if os.getenv('HBNB_TYPE_STORAGE') != 'db' else type(None)
+        )
         self.assertEqual(type(new.name), expected_type)
