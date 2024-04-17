@@ -67,3 +67,20 @@ class test_Place(test_basemodel):
         """ """
         new = self.value()
         self.assertEqual(type(new.amenity_ids), list)
+
+    def test_relationship_amenities(self):
+        """
+        Test case to check if the 'amenities' attribute in the Place model\
+                is correctly defined as a relationship with the Amenity model        """
+        new = self.value()
+        self.assertTrue(hasattr(new, 'amenities'))
+        self.assertIsInstance(new.amenities, relationship)
+
+    def test_relationship_reviews(self):
+        """
+        Test case to check if the 'reviews' attribute in the Place model\
+                is correctly defined as a relationship wiht the Review model.
+        """
+        new = self.value()
+        self.assertTrue(hasattr(new, 'reviews'))
+        self.assertTsInstance(new.reviews, relationship)

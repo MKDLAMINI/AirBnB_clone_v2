@@ -27,3 +27,14 @@ class test_review(test_basemodel):
         """ """
         new = self.value()
         self.assertEqual(type(new.text), str)
+
+    def test_text_length(self):
+        """
+        Test case to check if the 'text' attribute in the Review model\
+                enforces the maximum length constraint.
+        """
+        new = self.value()
+        max_length = 1024
+        long_text = "a" * (max_length + 1)
+        new.text = long_text
+        self.assertRaises(ValueError, setattr, new, 'text', long_text)

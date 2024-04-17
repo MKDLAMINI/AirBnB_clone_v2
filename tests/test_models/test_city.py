@@ -22,3 +22,12 @@ class test_City(test_basemodel):
         """ """
         new = self.value()
         self.assertEqual(type(new.name), str)
+
+    def test_relationship_places(self):
+        """
+        Test case to check if the 'places' attribute in the City model\
+                is correctly defined as a relationship with the Place model.
+        """
+        new = self.value()
+        self.assertTrue(hasattr(new, 'places'))
+        self.assertIsInstance(new.places, relationship)

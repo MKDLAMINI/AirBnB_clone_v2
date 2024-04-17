@@ -97,3 +97,31 @@ class test_basemodel(unittest.TestCase):
         n = new.to_dict()
         new = BaseModel(**n)
         self.assertFalse(new.created_at == new.updated_at)
+
+    def test_invalid_uuid(self):
+        """Test case to check if TypeError is raised when creating BaseModel\
+            instance with an invalid UUID.
+        """
+        with self.assertRaises(TypeError):
+            new = self.value(id="invalid_uuid")
+
+    def test_to_dict_include_hidden(self):
+        """Test case to check if the 'to_dict' method correctly includes
+        hidden\ attributes when the 'include_hidden' parameter is set to True
+        """
+        i = self.value()
+        n = i.to_dict(include_hidden=True)
+        self.assertIn('__class__', n)
+        self.assertIn('created_at', n)
+        self.assertIn('updated_at', n)
+        self.assertIn('id', n)
+
+    def test_save_specified_storage(self):
+        """Test case to check if the 'save' method works properly when using\
+            specified storage.
+        """
+        from models import specified_storage
+        specified_storage = 'db'
+        i = self.value()
+        i.save()
+        self.assertIn(i, specified_storage.all())

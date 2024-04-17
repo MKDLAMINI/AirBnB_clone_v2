@@ -32,3 +32,21 @@ class test_User(test_basemodel):
         """ """
         new = self.value()
         self.assertEqual(type(new.password), str)
+
+    def test_places_relationship(self):
+        """
+        Test case to check if the 'places' relationship in the User model is
+        correctly defined.
+        """
+        new_user = self.value()
+        self.assertTrue(hasattr(new_user, 'places'))
+        self.assertEqual(type(new_user.places), relationship)
+
+    def test_reviews_relationship(self):
+        """
+        Test case to check if the 'reviews' relationship in the User model is
+        correctly defined.
+        """
+        new_user = self.value()
+        self.assertTrue(hasattr(new_user, 'reviews'))
+        self.assertEqual(type(new_user.reviews), relationship)

@@ -107,3 +107,12 @@ class test_fileStorage(unittest.TestCase):
         from models.engine.file_storage import FileStorage
         print(type(storage))
         self.assertEqual(type(storage), FileStorage)
+
+    def test_close_method(self):
+        """ Test the close() method."""
+        new = BaseModel()
+        storage.save()
+        storage.close()
+        new = BaseModel()
+        storage.save()
+        self.assertTrue(os.path.exists('file.json'))
