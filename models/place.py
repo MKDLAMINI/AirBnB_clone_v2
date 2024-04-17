@@ -36,3 +36,12 @@ class Place(BaseModel, Base):
         latitude = 0.0
         longitude = 0.0
         amenity_ids = []
+
+        @property
+        def reviews(self):
+            """Getter attribute that returns the list of Review instances."""
+            from models import storage
+            all_reviews = storage.all(Review).values()
+            list_of_reviews = [review for review in all_reviews
+                               if review.place_id == self.id]
+            return list_of_reviews
