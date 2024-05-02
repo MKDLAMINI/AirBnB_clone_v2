@@ -11,7 +11,7 @@ env.hosts = ['34.207.211.211', '54.161.236.197']
 
 def do_deploy(archive_path):
     """
-    Distributes an archive to the web servers
+    Distribute an archive to web servers
 
     Args:
         archive_path (str): Path to the archive file to deploy
