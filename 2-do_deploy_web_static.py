@@ -10,7 +10,6 @@ env.hosts = ['34.207.211.211', '54.161.236.197']
 
 
 def do_deploy(archive_path):
-<<<<<<< HEAD
     """
     Distribute an archive to web servers
 
@@ -20,9 +19,6 @@ def do_deploy(archive_path):
     Returns:
         bool: True if deployment is successful, False otherwise
     """
-=======
-    """distributes an archive to the web servers"""
->>>>>>> c32bdad278dedf018ff48615d73b4fd6fb7b7dc4
     if exists(archive_path) is False:
         return False
     try:
