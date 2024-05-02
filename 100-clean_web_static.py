@@ -19,17 +19,15 @@ def do_clean(number=0):
     Returns:
         None
     """
-    number = max(int(number), 1)
+    number = 1 if int(number) == 0 else int(number)
 
+    all_arcs = sorted(os.listdir("versions"))
+    [all_arcs.pop() for index in range(number)]
     with lcd("versions"):
-        local_arch = sorted(os.listdir("."))
-        to_delete_local = (local_arch[:-number] if number < len(local_arch)
-                           else [])
-        [local("rm -f ./{}".format(arc)) for arc in to_delete_local]
+        [local("rm ./{}".format(arc)) for arc in all_arcs]
 
     with cd("/data/web_static/releases"):
-        remote_arch = run("ls -tr").split()
-        remote_arch = [arc for arc in remote_arch if "web_static_" in arc]
-        to_delete_remote = (remote_arch[:-number] if number < len(remote_arch)
-                            else [])
-        [run("rm -rf ./{}".format(arc)) for arc in to_delete_remote]
+        all_arcs = run("ls -tr").split()
+        all_arcs = [arc for arc in all_arcs if "web_static_" in arc]
+        [all_arcs.pop() for index in range(number)]
+        [run("rm -rf ./{}".format(arc)) for arc in all_arcs]
