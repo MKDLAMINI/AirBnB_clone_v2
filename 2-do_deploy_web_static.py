@@ -19,11 +19,9 @@ def do_deploy(archive_path):
     Returns:
         bool: True if deployment is successful, False otherwise
     """
+    if exists(archive_path) is False:
+        return False
     try:
-        # Check if the archive exists locally
-        if not exists(archive_path):
-            return False
-
         full_file_name = archive_path.split("/")[-1]
         file_name = full_file_name.split(".")[0]
         base_path = "/data/web_static/releases/"
@@ -36,8 +34,6 @@ def do_deploy(archive_path):
         run(f'rm -rf {base_path}{file_name}/web_static')
         run(f'rm -rf /data/web_static/current')
         run(f'ln -s {base_path}{file_name}/ /data/web_static/current')
-
-        print("New version deployed!")
         return True
     except Exception as e:
         return False
