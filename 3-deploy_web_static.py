@@ -9,6 +9,7 @@ from datetime import datetime
 
 env.hosts = ['34.207.211.211', '54.161.236.197']
 
+
 def do_pack():
     """
     Compresses the contents of the web_static folder into a .tgz archive
@@ -16,14 +17,16 @@ def do_pack():
     Returns:
         Path to the created archive if successful, None otherwise
     """
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-    archive_name = f"web_static_{timestamp}.tgz"
-    local("mkdir -p versions")
-    create_archive = local(f"tar -cvzf versions/{archive_name} web_static")
-    if create_archive is not None:
-        return f"versions/{archive_name}"
-    else:
+    try:
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        if isdir("versions") is False:
+            local("mkdir versions")
+        archive_name = f"versions/web_static_{timestamp}.tgz"
+        local(f"tar -cvzf {archive_name} web_static")
+        return archive_name
+    except Exception as e:
         return None
+
 
 def do_deploy(archive_path):
     """
@@ -35,30 +38,28 @@ def do_deploy(archive_path):
     Returns:
         bool: True if deployment is successful, False otherwise
     """
-    try:
-        # Check if the archive exists locally
-        if not exists(archive_path):
-            return False
+    if not exists(archive_path):
+        return False
 
-        archive_name = archive_path.split("/")[-1]
-        target_folder = f"/data/web_static/releases/{archive_name.split('.')[0]}"
+    try:
+        full_file_name = archive_path.split("/")[-1]
+        file_name = full_file_name.split(".")[0]
+        base_path = "/data/web_static/releases/"
 
         put(archive_path, '/tmp/')
-
-        run(f'mkdir -p {target_folder}')
-        run(f'tar -xzf /tmp/{archive_name} -C {target_folder}')
-
-        run(f'rm /tmp/{archive_name}')
-
-        run(f'mv {target_folder}/web_static/* {target_folder}/')
-        run(f'rm -rf {target_folder}/web_static')
-        run('rm -rf /data/web_static/current')
-        run(f'ln -s {target_folder} /data/web_static/current')
+        run(f'mkdir -p {base_path}{file_name}/')
+        run(f'tar -xzf /tmp/{full_file_name} -C {base_path}{file_name}/')
+        run(f'rm /tmp/{full_file_name}')
+        run(f'mv {base_path}{file_name}/web_static/* {base_path}{file_name}/')
+        run(f'rm -rf {base_path}{file_name}/web_static')
+        run(f'rm -rf /data/web_static/current')
+        run(f'ln -s {base_path}{file_name}/ /data/web_static/current')
 
         print("New version deployed!")
         return True
-    except:
+    except Exception as e:
         return False
+
 
 def deploy():
     """
