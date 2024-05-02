@@ -19,21 +19,25 @@ def do_deploy(archive_path):
     Returns:
         bool: True if deployment is successful, False otherwise
     """
-    if exists(archive_path) is False:
-        return False
     try:
-        full_file_name = archive_path.split("/")[-1]
-        file_name = full_file_name.split(".")[0]
+        if not exists(archive_path):
+            return False
+
+        file_name = archive_path.split("/")[-1].split(".")[0]
         base_path = "/data/web_static/releases/"
 
         put(archive_path, '/tmp/')
+
         run(f'mkdir -p {base_path}{file_name}/')
-        run(f'tar -xzf /tmp/{full_file_name} -C {base_path}{file_name}/')
-        run(f'rm /tmp/{full_file_name}')
-        run(f'mv {base_path}{file_name}/web_static/* {base_path}{file_name}/')
-        run(f'rm -rf {base_path}{file_name}/web_static')
-        run(f'rm -rf /data/web_static/current')
+        run(f'tar -xzf /tmp/{file_name}.tgz -C {base_path}{file_name}/')
+
+        run(f'rm /tmp/{file_name}.tgz')
+
+        run('rm -rf /data/web_static/current')
+
         run(f'ln -s {base_path}{file_name}/ /data/web_static/current')
+
+        print("New version deployed!")
         return True
     except Exception as e:
         return False
