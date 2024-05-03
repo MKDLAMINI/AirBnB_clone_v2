@@ -6,7 +6,7 @@ Fabric script for deploying a web_static archive to web servers
 from fabric.api import put, run, env
 from os.path import exists
 
-env.hosts = ['34.207.211.211', '54.161.236.197']
+env.hosts = ['100.25.33.135', '18.206.192.126']
 
 
 def do_deploy(archive_path):
