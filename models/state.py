@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
 from models import specified_storage
@@ -17,3 +17,18 @@ class State(BaseModel, Base):
 
     else:
         name = ''
+
+def __init__(self, *args, **kwargs):
+    """Initialize state"""
+    super().__init__(*args, **kwargs)
+
+if specified_storage == "db":
+   @property
+   def cities(self):
+       """Getter for list of city instances related to state"""
+       city_list = []
+       all_cities = models.storage.all(City)
+       for city in all_cities.values():
+           if city.state_id == self.id:
+               city_list.append(city)
+       return city_list
