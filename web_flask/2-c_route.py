@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 
 @app.route('/', strict_slashes=False)
-def hello_hbn():
+def greet_holberton():
     """
         This function returns Hello HBNB!
     """
@@ -15,7 +15,7 @@ def hello_hbn():
 
 
 @app.route('/hbnb', strict_slashes=False)
-def hello_hbnb():
+def ret_hbnb():
     """
        This function return HBNB
     """
