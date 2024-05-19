@@ -1,21 +1,24 @@
-#!/usr/bin/python3
-""" City Module for HBNB project """
+#!/usr/bin/python
+""" holds class City"""
+import models
+from models.base_model import BaseModel, Base
+from os import getenv
+import sqlalchemy
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
-from models.base_model import BaseModel, Base
-from models import specified_storage
 
 
 class City(BaseModel, Base):
-    """ A class representing city data """
-
-    __tablename__ = 'cities'
-    if specified_storage == 'db':
-        name = Column(String(128), nullable=False)
+    """Representation of city """
+    if models.storage_t == "db":
+        __tablename__ = 'cities'
         state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
-        places = relationship("Place",
-                              cascade="all, delete-orphan",
-                              backref="city")
+        name = Column(String(128), nullable=False)
+        places = relationship("Place", backref="cities")
     else:
-        name = ''
-        state_id = ''
+        state_id = ""
+        name = ""
+
+    def __init__(self, *args, **kwargs):
+        """initializes city"""
+        super().__init__(*args, **kwargs)
